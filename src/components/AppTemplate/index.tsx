@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
-import { Container, LeftSide, RightSide } from "./styles";
+import SideMenu from "../SideMenu";
+import { Container, Content } from "./styles";
 
 interface AppTemplateProps {
   children: ReactNode;
@@ -7,8 +8,8 @@ interface AppTemplateProps {
 
 const AppTemplate = ({ children }: AppTemplateProps) => (
   <Container>
-    <LeftSide>aa</LeftSide>
-    <RightSide>{children}</RightSide>
+    <SideMenu />
+    <Content>{children}</Content>
   </Container>
 );
 
