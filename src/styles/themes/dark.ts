@@ -1,7 +1,7 @@
 export const darkTheme = {
   title: "dark",
   colors: {
-    prymary: "#FF7A00",
+    primary: "#FF7A00",
     secondary: "#FF9736",
     tertiary: "#FFBC7D",
     black1: "#131212",
