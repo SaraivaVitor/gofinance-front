@@ -14,7 +14,7 @@ const Chart = () => (
         { x: "A pagar", y: 20 },
         { x: "A receber", y: 80 },
       ]}
-      style={{ labels: { display: "none" } }}
+      style={{ labels: { display: "none" }, parent: { width: 520 } }}
       innerRadius={100}
       colorScale={["tomato", "orange"]}
       padAngle={5}
