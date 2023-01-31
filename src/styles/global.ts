@@ -25,13 +25,14 @@ export default createGlobalStyle`
             background-color: ${(props) => props.theme.colors.secondary};
         }
     }
-    input{
+    input, select{
         background-color: ${(props) => props.theme.colors.black3};
         border-radius: 4px;
         border: none;
         color: ${(props) => props.theme.colors.white};
         min-height: 27px;
         padding-left: 16px;
+        padding-right: 16px;
         padding-bottom: 8px;
         padding-top: 8px;
         
@@ -54,6 +55,33 @@ export default createGlobalStyle`
             color: #4B4747;
             font-size: 12px;
             font-weight: 500;
+        }
+    }
+    input[type="date"]{
+        ::-webkit-calendar-picker-indicator {
+            background-image: url(/calendar.png);
+            cursor: pointer;
+        }
+    }
+    select{
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 150px;
+        background-image: 
+            linear-gradient(45deg, transparent 50%, #FF7A00 50%),
+            linear-gradient(135deg, #FF7A00  50%, transparent 50%);
+        background-position:
+            calc(100% - 20px) calc(1em + 2px),
+            calc(100% - 15px) calc(1em + 2px),
+            calc(100% - .5em) .5em;
+        background-size:
+            5px 5px,
+            5px 5px,
+            1.5em 1.5em;
+        background-repeat: no-repeat;
+        select::-ms-expand {
+            display: none;
         }
     }
 `;

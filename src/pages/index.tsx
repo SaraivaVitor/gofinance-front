@@ -2,6 +2,9 @@ import Chart from "../components/Chart";
 import Card from "../components/Card";
 
 import { Container, RightSide } from "./styles";
+import DateInput from "../components/DateInput";
+import SearchBar from "../components/SearchBar";
+import TableNavbar from "../components/TableNavbar";
 
 const cardData = [
   {
@@ -20,12 +23,13 @@ const cardData = [
 
 const Home = () => (
   <Container>
-    <Chart />
+    {/* <Chart /> */}
+    <TableNavbar/>
     <RightSide>
-      {cardData.map((card) => (
+      {/* {cardData.map((card) => (
         <Card key={card.title} title={card.title} value={card.value} />
-      ))}
-      <button>Download</button>
+      ))} */}
+      {/* <button>Download</button> */}
     </RightSide>
   </Container>
 );
