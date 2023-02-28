@@ -43,3 +43,8 @@ export const Content = styled.div`
     padding: 0;
   }
 `;
+
+export const ErrorMessage = styled.span`
+  color: red;
+  font-size: 14px;
+`
