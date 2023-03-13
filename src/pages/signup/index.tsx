@@ -8,10 +8,11 @@ import {
 import logo from "../../assets/logo.png";
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/router";
+import api from "../../services/api";
+import useLogin from "../../hooks/useLogin";
 
 const Signup = () => {
-  const [username, setUsername] = useState("");
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -19,8 +20,8 @@ const Signup = () => {
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const buttonLabel = isLoading ? "Carregando..." : "Cadastrar";
-  const router = useRouter();
   const passwordIsValid = password === confirmPassword;
+  const { login } = useLogin();
   const signup = async () => {
     try {
       setIsLoading(true);
@@ -28,16 +29,12 @@ const Signup = () => {
         setHasError(true);
         throw Error();
       }
-      await fetch(`http://localhost:8000/user`, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify({
-          username,
-          email,
-          password,
-        }),
+      await api.post("/user", {
+        userName,
+        email,
+        password,
       });
-      router.push("/");
+      await login({ userName, password });
     } catch (err) {
       if (!passwordIsValid) {
         setErrorMessage("As senhas precisam ser compativeis.");
@@ -48,26 +45,26 @@ const Signup = () => {
   };
   const inputProps = [
     {
-      type: 'text',
-      placeholder: 'Nome de usuário',
-      setState: setUsername
+      type: "text",
+      placeholder: "Nome de usuário",
+      setState: setUserName,
     },
     {
-      type: 'email',
-      placeholder: 'Email',
-      setState: setEmail
+      type: "email",
+      placeholder: "Email",
+      setState: setEmail,
     },
     {
-      type: 'password',
-      placeholder: 'Senha',
-      setState: setPassword
+      type: "password",
+      placeholder: "Senha",
+      setState: setPassword,
     },
     {
-      type: 'password',
-      placeholder: 'Repetir senha',
-      setState: setConfirmPassword
+      type: "password",
+      placeholder: "Repetir senha",
+      setState: setConfirmPassword,
     },
-  ]
+  ];
   return (
     <Container>
       <Content>
