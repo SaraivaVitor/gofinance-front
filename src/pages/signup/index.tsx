@@ -3,6 +3,7 @@ import {
   Container,
   Content,
   ErrorMessage,
+  FormContainer,
 } from "../../styles/auth/auth.styles";
 
 import logo from "../../assets/logo.png";
@@ -18,15 +19,35 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [responseErrorMessage, setResponseErrorMessage] = useState("");
   const buttonLabel = isLoading ? "Carregando..." : "Cadastrar";
   const passwordIsValid = password === confirmPassword;
   const { login } = useLogin();
+  const verifyEmail = (email: string) => {
+    const regex = /\S+@\S+\.\S+/;
+    return regex.test(email);
+  };
+  const cleanErrors = () => {
+    setHasError(false);
+    setPasswordErrorMessage("");
+    setEmailErrorMessage("");
+    setResponseErrorMessage("");
+  };
   const signup = async () => {
+    const emailIsValid = verifyEmail(email);
     try {
       setIsLoading(true);
+      cleanErrors();
+      if (!emailIsValid) {
+        setHasError(true);
+        setEmailErrorMessage("Email inválido.");
+        throw Error();
+      }
       if (!passwordIsValid) {
         setHasError(true);
+        setPasswordErrorMessage("As senhas precisam ser compativeis.");
         throw Error();
       }
       await api.post("/user", {
@@ -35,10 +56,17 @@ const Signup = () => {
         password,
       });
       await login({ userName, password });
-    } catch (err) {
-      if (!passwordIsValid) {
-        setErrorMessage("As senhas precisam ser compativeis.");
-      }
+    } catch (err: any) {
+      const userAlreadyExists = err.response?.status === 500;
+      const hasEmptyInput = err.response?.status === 400;
+      if (userAlreadyExists)
+        setResponseErrorMessage(
+          "Já existe um usuário cadastrado com este email ou username na plataforma"
+        );
+      if (hasEmptyInput)
+        setResponseErrorMessage(
+          "Preencha todos os campos para poder cadastrar na plataforma"
+        );
     } finally {
       setIsLoading(false);
     }
@@ -48,40 +76,48 @@ const Signup = () => {
       type: "text",
       placeholder: "Nome de usuário",
       setState: setUserName,
+      errorMessage: "",
     },
     {
       type: "email",
       placeholder: "Email",
       setState: setEmail,
+      errorMessage: emailErrorMessage,
     },
     {
       type: "password",
       placeholder: "Senha",
       setState: setPassword,
+      errorMessage: "",
     },
     {
       type: "password",
       placeholder: "Repetir senha",
       setState: setConfirmPassword,
+      errorMessage: passwordErrorMessage,
     },
   ];
   return (
     <Container>
       <Content>
         <Image src={logo} alt="GoFinance" width={150} />
-        {inputProps.map((prop) => (
-          <input
-            key={prop.placeholder}
-            type={prop.type}
-            placeholder={prop.placeholder}
-            onChange={(evt) => prop.setState(evt.target.value)}
-          />
-        ))}
-        <button onClick={signup}>{buttonLabel}</button>
-        <ErrorMessage>{hasError && errorMessage}</ErrorMessage>
-        <p>
-          Já possui uma conta? <Link href="/signin">Entre!</Link>
-        </p>
+        <FormContainer>
+          {inputProps.map((prop) => (
+            <>
+              <input
+                type={prop.type}
+                placeholder={prop.placeholder}
+                onChange={(evt) => prop.setState(evt.target.value)}
+              />
+              <ErrorMessage>{hasError && prop.errorMessage}</ErrorMessage>
+            </>
+          ))}
+          <button onClick={signup}>{buttonLabel}</button>
+          <ErrorMessage>{responseErrorMessage}</ErrorMessage>
+          <p>
+            Já possui uma conta? <Link href="/signin">Entre!</Link>
+          </p>
+        </FormContainer>
       </Content>
     </Container>
   );

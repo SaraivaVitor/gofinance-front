@@ -13,6 +13,12 @@ export const Container = styled.div`
     position: absolute;
     top: 25px;
   }
+
+  #logout {
+    position: absolute;
+    bottom: 25px;
+    cursor: pointer;
+  }
 `;
 
 export const MenuItems = styled.div`

@@ -9,24 +9,26 @@ export const Container = styled.div`
 `;
 
 export const Content = styled.div`
-  gap: 21px;
   border-radius: 16px;
   width: 45%;
-  height: 60%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   background-color: ${(props) => props.theme.colors.black1};
+  padding: 40px;
 
+  p {
+    margin: 0 auto;
+  }
   img {
     margin-bottom: 40px;
   }
   a {
     color: ${(props) => props.theme.colors.primary};
     text-decoration: none;
-    &:hover{
-        text-decoration: underline;
+    &:hover {
+      text-decoration: underline;
     }
   }
   input {
@@ -41,10 +43,18 @@ export const Content = styled.div`
     height: 51px;
     width: 491px;
     padding: 0;
+    margin: 0 auto;
   }
+`;
+
+export const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
 `;
 
 export const ErrorMessage = styled.span`
   color: red;
   font-size: 14px;
-`
+`;

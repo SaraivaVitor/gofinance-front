@@ -1,10 +1,5 @@
 import { useRouter } from "next/router";
-import {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import AuthContext from "../Context";
 import api from "../services/api";
 import { LoginCredentials } from "../types/auth";
@@ -34,8 +29,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       router.pathname !== "/signin" &&
       router.pathname !== "/signup"
     ) {
-        setOrigin(router.pathname);
-        router.replace("/signin");
+      setOrigin(router.pathname);
+      router.replace("/signin");
     }
   }, [data, router]);
   const login = useCallback(
@@ -67,4 +62,4 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 };
 
-export default AuthProvider ;
+export default AuthProvider;

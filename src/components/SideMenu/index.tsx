@@ -6,8 +6,10 @@ import debit from "../../assets/debit.png";
 import receipt from "../../assets/receipt.png";
 import debitCategories from "../../assets/debitCategories.png";
 import receiptCategories from "../../assets/receiptCategories.png";
+import logoutImage from "../../assets/logout.png";
 
 import { Container, MenuItems } from "./styles";
+import useLogin from "../../hooks/useLogin";
 
 const menuItems = [
   {
@@ -33,6 +35,7 @@ const menuItems = [
 ];
 
 const SideMenu = () => {
+  const {logout} = useLogin()
   return (
     <Container>
       <Link href="/">
@@ -45,6 +48,7 @@ const SideMenu = () => {
           </Link>
         ))}
       </MenuItems>
+      <Image id="logout" src={logoutImage} alt="logout" width={30} onClick={logout} />
     </Container>
   );
 };
