@@ -34,9 +34,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [data, router]);
   const login = useCallback(
-    async ({ userName, password }: LoginCredentials) => {
+    async ({ username, password }: LoginCredentials) => {
       const response = await api.post("/login", {
-        userName,
+        username,
         password,
       });
       const accessToken = response.data;

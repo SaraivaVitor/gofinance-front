@@ -13,7 +13,7 @@ import api from "../../services/api";
 import useLogin from "../../hooks/useLogin";
 
 const Signup = () => {
-  const [userName, setUserName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -51,11 +51,11 @@ const Signup = () => {
         throw Error();
       }
       await api.post("/user", {
-        userName,
+        username,
         email,
         password,
       });
-      await login({ userName, password });
+      await login({ username, password });
     } catch (err: any) {
       const userAlreadyExists = err.response?.status === 500;
       const hasEmptyInput = err.response?.status === 400;
@@ -75,7 +75,7 @@ const Signup = () => {
     {
       type: "text",
       placeholder: "Nome de usuário",
-      setState: setUserName,
+      setState: setUsername,
       errorMessage: "",
     },
     {
