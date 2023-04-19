@@ -6,6 +6,9 @@ import AppTemplate from "../components/AppTemplate";
 import AuthProvider from "../providers/auth";
 import GlobalStyles from "../styles/global";
 import { darkTheme } from "../styles/themes/dark";
+import { ToastContainer } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -23,6 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <AppTemplate>
           <Component {...pageProps} />
         </AppTemplate>
+        <ToastContainer theme="dark" />
       </ThemeProvider>
     </AuthProvider>
   );

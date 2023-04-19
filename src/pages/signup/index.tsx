@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useState } from "react";
 import api from "../../services/api";
 import useLogin from "../../hooks/useLogin";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -57,6 +58,7 @@ const Signup = () => {
       });
       await login({ username, password });
     } catch (err: any) {
+      toast.error('Falha ao tentar fazer o cadastro...')
       const userAlreadyExists = err.response?.status === 500;
       const hasEmptyInput = err.response?.status === 400;
       if (userAlreadyExists)

@@ -10,6 +10,7 @@ import logo from "../../assets/logo.png";
 import Link from "next/link";
 import { useState } from "react";
 import useLogin from "../../hooks/useLogin";
+import { toast } from "react-toastify";
 
 const Signin = () => {
   const { login } = useLogin();
@@ -20,6 +21,7 @@ const Signin = () => {
     try {
       await login({ username, password });
     } catch (err: any) {
+      toast.error("Falha ao tentar fazer login...");
       const userNotFound = err.response?.status === 404;
       const invalidCredentialsNotFound = err.response?.status === 401;
       if (userNotFound) setErrorMessage("Usuário não encontrado na plataforma");
