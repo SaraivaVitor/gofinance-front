@@ -11,9 +11,10 @@ import Link from "next/link";
 import { useState } from "react";
 import api from "../../services/api";
 import useLogin from "../../hooks/useLogin";
+import { toast } from "react-toastify";
 
 const Signup = () => {
-  const [userName, setUserName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -51,12 +52,13 @@ const Signup = () => {
         throw Error();
       }
       await api.post("/user", {
-        userName,
+        username,
         email,
         password,
       });
-      await login({ userName, password });
+      await login({ username, password });
     } catch (err: any) {
+      toast.error('Falha ao tentar fazer o cadastro...')
       const userAlreadyExists = err.response?.status === 500;
       const hasEmptyInput = err.response?.status === 400;
       if (userAlreadyExists)
@@ -75,7 +77,7 @@ const Signup = () => {
     {
       type: "text",
       placeholder: "Nome de usuário",
-      setState: setUserName,
+      setState: setUsername,
       errorMessage: "",
     },
     {

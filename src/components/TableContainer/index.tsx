@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import TableNavbar from "../TableNavbar";
 import { Container } from "./styles";
 
 interface TableContainerProps {
@@ -9,7 +8,6 @@ interface TableContainerProps {
 const TableContainer = ({ children }: TableContainerProps) => {
   return (
     <Container>
-      <TableNavbar />
       {children}
     </Container>
   );

@@ -10,19 +10,22 @@ import logo from "../../assets/logo.png";
 import Link from "next/link";
 import { useState } from "react";
 import useLogin from "../../hooks/useLogin";
+import { toast } from "react-toastify";
 
 const Signin = () => {
   const { login } = useLogin();
-  const [userName, setUserName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const signIn = async() => {
+  const signIn = async () => {
     try {
-      login({ userName, password });
+      await login({ username, password });
     } catch (err: any) {
+      toast.error("Falha ao tentar fazer login...");
       const userNotFound = err.response?.status === 404;
-      console.log(err.response?.status)
+      const invalidCredentialsNotFound = err.response?.status === 401;
       if (userNotFound) setErrorMessage("Usuário não encontrado na plataforma");
+      if (invalidCredentialsNotFound) setErrorMessage("Credenciais inválidas");
     }
   };
   return (
@@ -34,7 +37,7 @@ const Signin = () => {
             type="text"
             placeholder="Nome de usuário"
             autoComplete="off"
-            onChange={(evt) => setUserName(evt.target.value)}
+            onChange={(evt) => setUsername(evt.target.value)}
           />
           <input
             type="password"
@@ -43,7 +46,9 @@ const Signin = () => {
             onChange={(evt) => setPassword(evt.target.value)}
           />
           <button onClick={signIn}>Entrar</button>
-          <ErrorMessage>{errorMessage}</ErrorMessage>
+          <span>
+            <ErrorMessage>{errorMessage}</ErrorMessage>
+          </span>
           <p>
             Ainda não possui uma conta? <Link href="/signup">Cadastre-se!</Link>
           </p>

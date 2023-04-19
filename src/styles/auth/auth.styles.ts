@@ -39,6 +39,9 @@ export const Content = styled.div`
       font-size: 20px;
     }
   }
+  span {
+    margin: 0 auto;
+  }
   button {
     height: 51px;
     width: 491px;
