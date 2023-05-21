@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from "react";
-import AuthContext from "../../Context";
+import { useCallback, useEffect, useState } from "react";
 import TableContainer from "../../components/TableContainer";
 import TableDetails from "../../components/TableDetails";
 import TableLine from "../../components/TableLine";
@@ -7,32 +6,34 @@ import { Container } from "../../styles/global";
 import TableNavbar from "../../components/TableNavbar";
 import api from "../../services/api";
 import { toast } from "react-toastify";
-
-const teste = [
-  {
-    title: "Titulo 1",
-    description: "descrição 1",
-  },
-  {
-    title: "Titulo 2",
-    description: "descrição 2",
-  },
-  {
-    title: "Titulo 3",
-    description: "descrição 3",
-  },
-];
+import { ReceiptCategoriesType } from "../../types/categories";
 
 const ReceiptCategories = () => {
   const [userId, setUserId] = useState<string | null>();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState<ReceiptCategoriesType[]>([]);
+  const listReceiptCategories = useCallback(
+    async (id: string | null | undefined) => {
+      try {
+        setLoading(true);
+        const response = await api.get(`/category?user_id=${id}&type=receipt`);
+        setCategories(response.data);
+      } catch {
+        toast.error("Erro ao buscar categorias...");
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
   useEffect(() => {
     const user_id = localStorage.getItem("@gofinance:user_id");
     setUserId(user_id);
-  }, []);
-  console.log("🚀 user_id:", userId);
-  const createCategoryHandle = async () => {
+    listReceiptCategories(user_id);
+  }, [userId, listReceiptCategories]);
+  const createCategoryHandle = useCallback(async () => {
     try {
       await api.post("/category", {
         user_id: Number(userId),
@@ -40,11 +41,13 @@ const ReceiptCategories = () => {
         description,
         type: "receipt",
       });
-      toast.success('Categoria criada com sucesso!')
+      listReceiptCategories(userId)
+      toast.success("Categoria criada com sucesso!");
     } catch {
-      toast.error('Erro ao criar categoria...')
+      toast.error("Erro ao criar categoria...");
     }
-  };
+  }, [title, description, userId, listReceiptCategories]);
+  if (loading) return <div>Carregando...</div>;
   return (
     <Container>
       <TableContainer>
@@ -56,11 +59,11 @@ const ReceiptCategories = () => {
           createCategoryHandle={createCategoryHandle}
         />
         <TableDetails>
-          {teste.map((test) => (
+          {categories.map((category) => (
             <TableLine
-              key={test.title}
-              title={test.title}
-              description={test.description}
+              key={category.id}
+              title={category.title}
+              description={category.description}
             />
           ))}
         </TableDetails>
