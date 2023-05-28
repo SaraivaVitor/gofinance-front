@@ -1,6 +1,13 @@
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { OutsideContainer, Container } from "./styles";
-import { ModalProps } from "../TableNavbar";
+
+interface ModalProps {
+  title: string;
+  buttonTitle: string;
+  setTitle: Dispatch<SetStateAction<string>>;
+  setDescription: Dispatch<SetStateAction<string>>;
+  createCategoryHandle: () => Promise<void>;
+}
 
 const Modal = ({
   title,

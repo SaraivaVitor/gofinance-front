@@ -7,11 +7,14 @@ import TableNavbar from "../../components/TableNavbar";
 import api from "../../services/api";
 import { toast } from "react-toastify";
 import { ReceiptCategoriesType } from "../../types/categories";
+import SearchType from "../../types/search";
 
 const ReceiptCategories = () => {
   const [userId, setUserId] = useState<string | null>();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [searchType, setSearchType] = useState<SearchType>("title");
+  const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<ReceiptCategoriesType[]>([]);
   const listReceiptCategories = useCallback(
@@ -41,7 +44,7 @@ const ReceiptCategories = () => {
         description,
         type: "receipt",
       });
-      listReceiptCategories(userId)
+      listReceiptCategories(userId);
       toast.success("Categoria criada com sucesso!");
     } catch {
       toast.error("Erro ao criar categoria...");
@@ -57,6 +60,12 @@ const ReceiptCategories = () => {
           setTitle={setTitle}
           setDescription={setDescription}
           createCategoryHandle={createCategoryHandle}
+          searchText={searchText}
+          setSearchText={setSearchText}
+          searchType={searchType}
+          setSearchType={setSearchType}
+          setCategories={setCategories}
+          setLoading={setLoading}
         />
         <TableDetails>
           {categories.map((category) => (

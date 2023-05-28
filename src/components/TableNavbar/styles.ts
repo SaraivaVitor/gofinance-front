@@ -6,6 +6,13 @@ export const Container = styled.div`
     align-items: flex-end;
     width: 1096px;
 
+    select{
+        background-color: ${(props) => props.theme.colors.black1};
+        width: 130px;
+        cursor: pointer;
+        border-radius: 4px 0px 0px 4px;
+    }
+
     button{
         padding: 0px;
         width: 250px;
