@@ -17,3 +17,10 @@ export const Container = styled.div`
     cursor: pointer;
   }
 `;
+
+export const ButtonsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding-right: 16px;
+`

@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { CategoriesType } from "../../types/categories";
 import SearchType from "../../types/search";
 
-const ReceiptCategories = () => {
+const DebitCategories = () => {
   const [userId, setUserId] = useState<string | null>();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -17,11 +17,11 @@ const ReceiptCategories = () => {
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<CategoriesType[]>([]);
-  const listReceiptCategories = useCallback(
+  const listDebitCategories = useCallback(
     async (id: string | null | undefined) => {
       try {
         setLoading(true);
-        const response = await api.get(`/category?user_id=${id}&type=receipt`);
+        const response = await api.get(`/category?user_id=${id}&type=debit`);
         setCategories(response.data);
       } catch {
         toast.error("Erro ao buscar categorias...");
@@ -34,30 +34,30 @@ const ReceiptCategories = () => {
   useEffect(() => {
     const user_id = localStorage.getItem("@gofinance:user_id");
     setUserId(user_id);
-    listReceiptCategories(user_id);
-  }, [userId, listReceiptCategories]);
+    listDebitCategories(user_id);
+  }, [userId, listDebitCategories]);
   const createCategoryHandle = useCallback(async () => {
     try {
       await api.post("/category", {
         user_id: Number(userId),
         title,
         description,
-        type: "receipt",
+        type: "debit",
       });
-      listReceiptCategories(userId);
+      listDebitCategories(userId);
       toast.success("Categoria criada com sucesso!");
     } catch {
       toast.error("Erro ao criar categoria...");
     }
-  }, [title, description, userId, listReceiptCategories]);
+  }, [title, description, userId, listDebitCategories]);
   if (loading) return <div>Carregando...</div>;
   return (
     <Container>
       <TableContainer>
         <TableNavbar
           title="Nova categoria"
+          transactionType="debit"
           buttonTitle="Criar categoria"
-          transactionType="receipt"
           itemTitle={title}
           description={description}
           setTitle={setTitle}
@@ -77,7 +77,7 @@ const ReceiptCategories = () => {
               endpoint={`/category/${category.id}`}
               title={category.title}
               description={category.description}
-              listCategories={listReceiptCategories}
+              listCategories={listDebitCategories}
               editSuccessMessage="Categoria editada com sucesso!"
               editErrorMessage="Erro ao tentar editar categoria..."
               deleteSuccessMessage="Categoria deletada com sucesso!"
@@ -87,7 +87,7 @@ const ReceiptCategories = () => {
                 ID: category.id,
                 title: "",
                 description: "",
-                type: "receipt",
+                type: "debit",
               }}
             />
           ))}
@@ -97,4 +97,4 @@ const ReceiptCategories = () => {
   );
 };
 
-export default ReceiptCategories;
+export default DebitCategories;

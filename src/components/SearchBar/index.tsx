@@ -4,22 +4,24 @@ import { Container } from "./styles";
 import searchIcon from "../../assets/search.png";
 import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "react-toastify";
-import { ReceiptCategoriesType } from "../../types/categories";
+import { CategoriesType } from "../../types/categories";
 import api from "../../services/api";
 import SearchType from "../../types/search";
 
 interface SearchProps {
   pageType: "transaction" | "category";
+  transactionType: 'debit' | 'receipt';
   searchText: string;
   searchType: SearchType;
   setSearchText: Dispatch<SetStateAction<string>>;
   setSearchType: Dispatch<SetStateAction<SearchType>>;
-  setCategories: Dispatch<SetStateAction<ReceiptCategoriesType[]>>;
+  setCategories: Dispatch<SetStateAction<CategoriesType[]>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 const SearchBar = ({
   pageType,
+  transactionType,
   searchText,
   searchType,
   setSearchText,
@@ -28,12 +30,13 @@ const SearchBar = ({
   setLoading,
 }: SearchProps) => {
   const isTransactionPage = pageType === "transaction";
+  const endpoint = isTransactionPage ? 'account' : 'category'
   const searchReceiptCategories = async () => {
     const id = localStorage.getItem("@gofinance:user_id");
     try {
       setLoading(true);
       const response = await api.get(
-        `/category?user_id=${id}&type=receipt&${searchType}=${searchText}`
+        `/${endpoint}?user_id=${id}&type=${transactionType}&${searchType}=${searchText}`
       );
       setCategories(response.data);
     } catch {

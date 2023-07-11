@@ -1,4 +1,4 @@
-export type ReceiptCategoriesType = {
+export type CategoriesType = {
   created_at: Date;
   id: number;
   description: string;

@@ -2,11 +2,14 @@ import { Dispatch, SetStateAction } from "react";
 import Modal from "../Modal";
 import SearchBar from "../SearchBar";
 import { Container, LeftSide } from "./styles";
-import { ReceiptCategoriesType } from "../../types/categories";
+import { CategoriesType } from "../../types/categories";
 import SearchType from "../../types/search";
 
 interface TableNavbarProps {
+  itemTitle: string;
+  transactionType: 'debit' | 'receipt';
   title: string;
+  description: string;
   buttonTitle: string;
   setTitle: Dispatch<SetStateAction<string>>;
   setDescription: Dispatch<SetStateAction<string>>;
@@ -18,7 +21,7 @@ interface TableNavbarProps {
     SetStateAction<SearchType>
   >;
   setCategories: Dispatch<
-    SetStateAction<ReceiptCategoriesType[]>
+    SetStateAction<CategoriesType[]>
   >;
   setLoading: Dispatch<
     SetStateAction<boolean>
@@ -26,6 +29,7 @@ interface TableNavbarProps {
 }
 
 const TableNavbar = ({
+  itemTitle,
   title,
   buttonTitle,
   setTitle,
@@ -36,12 +40,15 @@ const TableNavbar = ({
   searchType,
   setSearchType,
   setCategories,
-  setLoading
+  setLoading,
+  transactionType,
+  description
 }: TableNavbarProps) => (
   <Container>
     <LeftSide>
       <SearchBar 
         pageType="category"
+        transactionType={transactionType}
         searchText={searchText}
         setSearchText={setSearchText}
         searchType={searchType}
@@ -51,11 +58,14 @@ const TableNavbar = ({
       />
     </LeftSide>
     <Modal
+      isButton
       title={title}
+      itemTitle={itemTitle}
+      description={description}
       buttonTitle={buttonTitle}
       setTitle={setTitle}
       setDescription={setDescription}
-      createCategoryHandle={createCategoryHandle}
+      onSubmit={createCategoryHandle}
     />
   </Container>
 );
