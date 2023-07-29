@@ -17,10 +17,13 @@ export const Header = styled.div`
     font-size: 16px;
     color: ${(props) => props.theme.colors.primary};
     width: 300px;
-
     &:nth-child(2) {
         width: 70%;
     }
+  }
+  div{
+    height: 100%;
+    width: 200px;
   }
 `;
 

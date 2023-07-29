@@ -8,15 +8,43 @@ import api from "../../services/api";
 import { toast } from "react-toastify";
 import { CategoriesType } from "../../types/categories";
 import SearchType from "../../types/search";
+import { TransactionsType } from "../../types/transactions";
 
-const DebitCategories = () => {
+const teste = [
+  {
+    id: 1,
+    title: "teste",
+    description: "sdasdasd",
+    date: "11/09/2014",
+    value: 10,
+  },
+  {
+    id: 12,
+    title: "teste",
+    description: "sdasdasd",
+    date: "11/09/2014",
+    value: 10,
+  },
+  {
+    id: 13,
+    title: "teste",
+    description: "sdasdasd",
+    date: "11/09/2014",
+    value: 10,
+  },
+];
+
+const Debit = () => {
   const [userId, setUserId] = useState<string | null>();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [value, setValue] = useState<number>();
+  const [categoryId, setCategoryId] = useState(0);
   const [searchType, setSearchType] = useState<SearchType>("title");
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<CategoriesType[]>([]);
+  const [debits, setDebits] = useState<TransactionsType[]>([]);
   const listDebitCategories = useCallback(
     async (id: string | null | undefined) => {
       try {
@@ -31,39 +59,59 @@ const DebitCategories = () => {
     },
     []
   );
+  const listDebit = useCallback(async (id: string | null | undefined) => {
+    try {
+      setLoading(true);
+      const response = await api.get(`/account?user_id=${id}&type=debit`);
+      setDebits(response.data);
+    } catch {
+      toast.error("Erro ao buscar dívidas...");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
   useEffect(() => {
     const user_id = localStorage.getItem("@gofinance:user_id");
     setUserId(user_id);
+    listDebit(user_id);
     listDebitCategories(user_id);
-  }, [userId, listDebitCategories]);
-  const createCategoryHandle = useCallback(async () => {
+  }, [userId, listDebit, listDebitCategories]);
+  const createDebitHandler = useCallback(async () => {
     try {
-      await api.post("/category", {
+      await api.post("/account", {
         user_id: Number(userId),
         title,
         description,
+        value,
+        category_id: categoryId,
+        date: new Date(),
         type: "debit",
       });
-      listDebitCategories(userId);
-      toast.success("Categoria criada com sucesso!");
+      listDebit(userId);
+      toast.success("Dívida adicionada com sucesso!");
     } catch {
-      toast.error("Erro ao criar categoria...");
+      toast.error("Erro ao adicionar dívida...");
     }
-  }, [title, description, userId, listDebitCategories]);
+  }, [categoryId, description, listDebit, title, userId, value]);
   if (loading) return <div>Carregando...</div>;
   return (
     <Container>
       <TableContainer>
         <TableNavbar
-          title="Nova categoria"
-          pageType="category"
+          title="Nova dívida"
+          pageType="transaction"
           transactionType="debit"
-          buttonTitle="Criar categoria"
+          buttonTitle="Adicionar dívida"
+          setCategoryId={setCategoryId}
+          value={value}
+          setValue={setValue}
+          categories={categories}
           itemTitle={title}
           description={description}
           setTitle={setTitle}
+          categoryId={categoryId}
           setDescription={setDescription}
-          onSubmit={createCategoryHandle}
+          onSubmit={createDebitHandler}
           searchText={searchText}
           setSearchText={setSearchText}
           searchType={searchType}
@@ -71,22 +119,24 @@ const DebitCategories = () => {
           setCategories={setCategories}
           setLoading={setLoading}
         />
-        <TableDetails pageType="category">
-          {categories.map((category) => (
+        <TableDetails pageType="transaction">
+          {debits.map((debit) => (
             <TableLine
-              key={category.id}
-              endpoint={`/category/${category.id}`}
-              title={category.title}
-              description={category.description}
-              listCategories={listDebitCategories}
-              editSuccessMessage="Categoria editada com sucesso!"
-              editErrorMessage="Erro ao tentar editar categoria..."
-              deleteSuccessMessage="Categoria deletada com sucesso!"
-              deleteErrorMessage="Erro ao tentar deletar categoria..."
-              pageType="category"
+              key={debit.id}
+              endpoint={`/account/${debit.id}`}
+              title={debit.title}
+              description={debit.description}
+              date={debit.date}
+              value={debit.value}
+              listCategories={listDebit}
+              editSuccessMessage="Dívida editada com sucesso!"
+              editErrorMessage="Erro ao tentar editar dívida..."
+              deleteSuccessMessage="Dívida deletada com sucesso!"
+              deleteErrorMessage="Erro ao tentar deletar dívida..."
+              pageType="transaction"
               payload={{
                 user_id: Number(userId),
-                ID: category.id,
+                ID: debit.id,
                 title: "",
                 description: "",
                 type: "debit",
@@ -99,4 +149,4 @@ const DebitCategories = () => {
   );
 };
 
-export default DebitCategories;
+export default Debit;

@@ -8,12 +8,18 @@ import SearchType from "../../types/search";
 interface TableNavbarProps {
   itemTitle: string;
   transactionType: 'debit' | 'receipt';
+  pageType: 'transaction' | 'category';
+  value?: number; 
+  setValue?: Dispatch<SetStateAction<number | undefined>>;
   title: string;
+  categoryId?: number; 
+  setCategoryId?: Dispatch<SetStateAction<number>>;
+  categories?: CategoriesType[]
   description: string;
   buttonTitle: string;
   setTitle: Dispatch<SetStateAction<string>>;
   setDescription: Dispatch<SetStateAction<string>>;
-  createCategoryHandle: () => Promise<void>;
+  onSubmit: () => Promise<void>;
   searchText: string;
   searchType: SearchType;
   setSearchText: Dispatch<SetStateAction<string>>;
@@ -31,10 +37,16 @@ interface TableNavbarProps {
 const TableNavbar = ({
   itemTitle,
   title,
+  pageType,
+  value, 
+  setValue,
+  categoryId, 
+  setCategoryId,
   buttonTitle,
   setTitle,
+  categories,
   setDescription,
-  createCategoryHandle,
+  onSubmit,
   searchText,
   setSearchText,
   searchType,
@@ -59,13 +71,19 @@ const TableNavbar = ({
     </LeftSide>
     <Modal
       isButton
+      value={value} 
+      setValue={setValue}
+      categoryId={categoryId} 
+      setCategoryId={setCategoryId}
+      pageType={pageType}
+      categories={categories}
       title={title}
       itemTitle={itemTitle}
       description={description}
       buttonTitle={buttonTitle}
       setTitle={setTitle}
       setDescription={setDescription}
-      onSubmit={createCategoryHandle}
+      onSubmit={onSubmit}
     />
   </Container>
 );

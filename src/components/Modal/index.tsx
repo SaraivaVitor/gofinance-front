@@ -3,9 +3,16 @@ import { OutsideContainer, Container } from "./styles";
 import Image from "next/image";
 
 import editIcon from "../../assets/pencil-sharp.png";
+import { CategoriesType } from "../../types/categories";
 
 interface ModalProps {
   title: string;
+  value?: number;
+  setValue?: Dispatch<SetStateAction<number | undefined>>;
+  categoryId?: number;
+  setCategoryId?: Dispatch<SetStateAction<number>>;
+  categories?: CategoriesType[];
+  pageType: "category" | "transaction";
   itemTitle?: string;
   description?: string;
   buttonTitle: string;
@@ -13,6 +20,7 @@ interface ModalProps {
   isEditing?: boolean;
   editingTitle?: string;
   editingDescription?: string;
+  editingValue?: number;
   setTitle: Dispatch<SetStateAction<string>>;
   setDescription: Dispatch<SetStateAction<string>>;
   onSubmit: () => Promise<void>;
@@ -22,6 +30,12 @@ const Modal = ({
   title,
   itemTitle,
   description,
+  value,
+  setValue,
+  setCategoryId,
+  categories,
+  editingValue,
+  pageType,
   buttonTitle,
   isButton,
   isEditing,
@@ -33,6 +47,7 @@ const Modal = ({
 }: ModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const outSideContainerRef = useRef(null);
+  const isTransaction = pageType === "transaction";
   const openModal = () => setIsOpen(true);
   const closeModal = (evt: React.MouseEvent<HTMLElement>) => {
     if (evt.target === outSideContainerRef.current) {
@@ -66,6 +81,25 @@ const Modal = ({
               placeholder="Descrição"
               onChange={(evt) => setDescription(evt.target.value)}
             />
+            {isTransaction && !!setValue && (
+              <input
+                type="number"
+                value={isEditing ? editingValue : value}
+                placeholder="Valor"
+                onChange={(evt) => setValue(Number(evt.target.value))}
+              />
+            )}
+            {isTransaction && !!setCategoryId && (
+              <select
+                onChange={(evt) => setCategoryId(Number(evt.target.value))}
+              >
+                {categories?.map((category) => (
+                  <option key={category?.id} value={category?.id}>
+                    {category?.title}
+                  </option>
+                ))}
+              </select>
+            )}
             <button onClick={submit}>{buttonTitle}</button>
           </Container>
         </OutsideContainer>

@@ -14,7 +14,6 @@ export const OutsideContainer = styled.div`
 
 export const Container = styled.div`
   width: 607px;
-  height: 378px;
   border-radius: 16px;
   display: flex;
   background-color: ${(props) => props.theme.colors.black1};
@@ -28,6 +27,15 @@ export const Container = styled.div`
   input {
     height: 57px;
     margin-bottom: 21px;
+    ::-webkit-input-placeholder {
+      font-size: 20px;
+    }
+  }
+  select {
+    height: 57px;
+    width: 100%;
+    margin-bottom: 21px;
+    background-color: ${(props) => props.theme.colors.black3};
     ::-webkit-input-placeholder {
       font-size: 20px;
     }

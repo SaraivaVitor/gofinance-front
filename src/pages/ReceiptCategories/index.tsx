@@ -58,11 +58,12 @@ const ReceiptCategories = () => {
           title="Nova categoria"
           buttonTitle="Criar categoria"
           transactionType="receipt"
+          pageType="category"
           itemTitle={title}
           description={description}
           setTitle={setTitle}
           setDescription={setDescription}
-          createCategoryHandle={createCategoryHandle}
+          onSubmit={createCategoryHandle}
           searchText={searchText}
           setSearchText={setSearchText}
           searchType={searchType}
@@ -70,7 +71,7 @@ const ReceiptCategories = () => {
           setCategories={setCategories}
           setLoading={setLoading}
         />
-        <TableDetails>
+        <TableDetails pageType="category">
           {categories.map((category) => (
             <TableLine
               key={category.id}
@@ -82,6 +83,7 @@ const ReceiptCategories = () => {
               editErrorMessage="Erro ao tentar editar categoria..."
               deleteSuccessMessage="Categoria deletada com sucesso!"
               deleteErrorMessage="Erro ao tentar deletar categoria..."
+              pageType="category"
               payload={{
                 user_id: Number(userId),
                 ID: category.id,
