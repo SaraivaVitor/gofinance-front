@@ -9,30 +9,7 @@ import { toast } from "react-toastify";
 import { CategoriesType } from "../../types/categories";
 import SearchType from "../../types/search";
 import { TransactionsType } from "../../types/transactions";
-
-const teste = [
-  {
-    id: 1,
-    title: "teste",
-    description: "sdasdasd",
-    date: "11/09/2014",
-    value: 10,
-  },
-  {
-    id: 12,
-    title: "teste",
-    description: "sdasdasd",
-    date: "11/09/2014",
-    value: 10,
-  },
-  {
-    id: 13,
-    title: "teste",
-    description: "sdasdasd",
-    date: "11/09/2014",
-    value: 10,
-  },
-];
+import { addDays, isSameDay } from "date-fns";
 
 const Debit = () => {
   const [userId, setUserId] = useState<string | null>();
@@ -93,6 +70,13 @@ const Debit = () => {
       toast.error("Erro ao adicionar dívida...");
     }
   }, [categoryId, description, listDebit, title, userId, value]);
+  const dateCompare = () => {
+    const itemsWithSameDate = debits.filter((currentItem) => {
+      const formattedDate = addDays(new Date(searchText), 1) 
+      return isSameDay(new Date(currentItem.date), new Date(formattedDate));
+    });
+    setDebits(itemsWithSameDate);
+  };
   if (loading) return <div>Carregando...</div>;
   return (
     <Container>
@@ -116,8 +100,9 @@ const Debit = () => {
           setSearchText={setSearchText}
           searchType={searchType}
           setSearchType={setSearchType}
-          setCategories={setCategories}
+          loadItems={setDebits}
           setLoading={setLoading}
+          dateCompare={dateCompare}
         />
         <TableDetails pageType="transaction">
           {debits.map((debit) => (

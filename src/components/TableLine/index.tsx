@@ -6,6 +6,7 @@ import Modal from "../Modal";
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import api from "../../services/api";
 import { toast } from "react-toastify";
+import { format } from "date-fns";
 
 interface EditItemProps {
   user_id: number;
@@ -65,19 +66,28 @@ const TableLine = ({
         ...payload,
         title: editingTitle,
         description: editingDescription,
-        value: editingValue
+        value: editingValue,
       });
       listCategories(user_id);
       toast.success(editSuccessMessage);
     } catch {
       toast.error(editErrorMessage);
     }
-  }, [endpoint, payload, editingTitle, editingDescription, editingValue, listCategories, editSuccessMessage, editErrorMessage]);
+  }, [
+    endpoint,
+    payload,
+    editingTitle,
+    editingDescription,
+    editingValue,
+    listCategories,
+    editSuccessMessage,
+    editErrorMessage,
+  ]);
   const formattedValue = value?.toLocaleString("pt-br", {
     style: "currency",
     currency: "BRL",
   });
-  const formattedDate = new Date(date).toLocaleDateString();
+  const formattedDate = format(new Date(date), "dd/MM/yyyy");
   return (
     <Container>
       <span>{title}</span>

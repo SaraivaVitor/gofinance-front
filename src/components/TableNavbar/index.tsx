@@ -4,17 +4,18 @@ import SearchBar from "../SearchBar";
 import { Container, LeftSide } from "./styles";
 import { CategoriesType } from "../../types/categories";
 import SearchType from "../../types/search";
+import { TransactionsType } from "../../types/transactions";
 
 interface TableNavbarProps {
   itemTitle: string;
-  transactionType: 'debit' | 'receipt';
-  pageType: 'transaction' | 'category';
-  value?: number; 
+  transactionType: "debit" | "receipt";
+  pageType: "transaction" | "category";
+  value?: number;
   setValue?: Dispatch<SetStateAction<number | undefined>>;
   title: string;
-  categoryId?: number; 
+  categoryId?: number;
   setCategoryId?: Dispatch<SetStateAction<number>>;
-  categories?: CategoriesType[]
+  categories?: CategoriesType[];
   description: string;
   buttonTitle: string;
   setTitle: Dispatch<SetStateAction<string>>;
@@ -23,24 +24,21 @@ interface TableNavbarProps {
   searchText: string;
   searchType: SearchType;
   setSearchText: Dispatch<SetStateAction<string>>;
-  setSearchType: Dispatch<
-    SetStateAction<SearchType>
-  >;
-  setCategories: Dispatch<
-    SetStateAction<CategoriesType[]>
-  >;
-  setLoading: Dispatch<
-    SetStateAction<boolean>
-  >;
+  setSearchType: Dispatch<SetStateAction<SearchType>>;
+  loadItems:
+    | Dispatch<SetStateAction<CategoriesType[]>>
+    | Dispatch<SetStateAction<TransactionsType[]>>;
+  setLoading: Dispatch<SetStateAction<boolean>>;
+  dateCompare?: () => void;
 }
 
 const TableNavbar = ({
   itemTitle,
   title,
   pageType,
-  value, 
+  value,
   setValue,
-  categoryId, 
+  categoryId,
   setCategoryId,
   buttonTitle,
   setTitle,
@@ -51,29 +49,31 @@ const TableNavbar = ({
   setSearchText,
   searchType,
   setSearchType,
-  setCategories,
+  loadItems,
   setLoading,
   transactionType,
-  description
+  description,
+  dateCompare,
 }: TableNavbarProps) => (
   <Container>
     <LeftSide>
-      <SearchBar 
-        pageType="category"
+      <SearchBar
+        pageType={pageType}
         transactionType={transactionType}
         searchText={searchText}
         setSearchText={setSearchText}
         searchType={searchType}
         setSearchType={setSearchType}
-        setCategories={setCategories}
+        loadItems={loadItems}
         setLoading={setLoading}
+        dateCompare={dateCompare}
       />
     </LeftSide>
     <Modal
       isButton
-      value={value} 
+      value={value}
       setValue={setValue}
-      categoryId={categoryId} 
+      categoryId={categoryId}
       setCategoryId={setCategoryId}
       pageType={pageType}
       categories={categories}

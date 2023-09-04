@@ -7,16 +7,21 @@ import { toast } from "react-toastify";
 import { CategoriesType } from "../../types/categories";
 import api from "../../services/api";
 import SearchType from "../../types/search";
+import { TransactionsType } from "../../types/transactions";
+import { isSameDay } from "date-fns";
 
 interface SearchProps {
   pageType: "transaction" | "category";
-  transactionType: 'debit' | 'receipt';
+  transactionType: "debit" | "receipt";
   searchText: string;
   searchType: SearchType;
   setSearchText: Dispatch<SetStateAction<string>>;
   setSearchType: Dispatch<SetStateAction<SearchType>>;
-  setCategories: Dispatch<SetStateAction<CategoriesType[]>>;
+  loadItems:
+    | Dispatch<SetStateAction<CategoriesType[]>>
+    | Dispatch<SetStateAction<TransactionsType[]>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
+  dateCompare?: () => void;
 }
 
 const SearchBar = ({
@@ -26,23 +31,29 @@ const SearchBar = ({
   searchType,
   setSearchText,
   setSearchType,
-  setCategories,
+  loadItems,
   setLoading,
+  dateCompare,
 }: SearchProps) => {
   const isTransactionPage = pageType === "transaction";
-  const endpoint = isTransactionPage ? 'account' : 'category'
+  const endpoint = isTransactionPage ? "account" : "category";
+  const inputType = searchType === "date" ? "date" : "search";
   const searchReceiptCategories = async () => {
     const id = localStorage.getItem("@gofinance:user_id");
-    try {
-      setLoading(true);
-      const response = await api.get(
-        `/${endpoint}?user_id=${id}&type=${transactionType}&${searchType}=${searchText}`
-      );
-      setCategories(response.data);
-    } catch {
-      toast.error("Erro ao buscar categorias...");
-    } finally {
-      setLoading(false);
+    if (searchType === "date" && dateCompare) {
+      dateCompare();
+    } else {
+      try {
+        setLoading(true);
+        const response = await api.get(
+          `/${endpoint}?user_id=${id}&type=${transactionType}&${searchType}=${searchText}`
+        );
+        loadItems(response.data);
+      } catch {
+        toast.error("Erro ao buscar categorias...");
+      } finally {
+        setLoading(false);
+      }
     }
   };
   return (
@@ -59,7 +70,7 @@ const SearchBar = ({
       </select>
       <input
         value={searchText}
-        type="search"
+        type={inputType}
         placeholder="Pesquisar"
         onChange={(evt) => setSearchText(evt.currentTarget.value)}
       />
