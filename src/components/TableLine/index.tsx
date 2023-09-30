@@ -20,6 +20,7 @@ interface TableLineProps {
   title: string;
   date?: any;
   value?: number;
+  categoryTitle?: string;
   editErrorMessage: string;
   deleteSuccessMessage: string;
   deleteErrorMessage: string;
@@ -36,6 +37,7 @@ const TableLine = ({
   description,
   date,
   value,
+  categoryTitle,
   listCategories,
   payload,
   editSuccessMessage,
@@ -87,13 +89,14 @@ const TableLine = ({
     style: "currency",
     currency: "BRL",
   });
-  const formattedDate = format(new Date(date), "dd/MM/yyyy");
+  const formattedDate = isTrasaction ? format(new Date(date), "dd/MM/yyyy") : '';
   return (
     <Container>
       <span>{title}</span>
       <span>{description}</span>
       {isTrasaction && (
         <>
+          <span>{categoryTitle}</span>
           <span>{formattedDate}</span>
           <span>{formattedValue}</span>
         </>

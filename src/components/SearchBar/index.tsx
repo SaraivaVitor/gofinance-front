@@ -2,13 +2,19 @@ import Image from "next/image";
 import { Container } from "./styles";
 
 import searchIcon from "../../assets/search.png";
-import { Dispatch, SetStateAction, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { toast } from "react-toastify";
 import { CategoriesType } from "../../types/categories";
 import api from "../../services/api";
 import SearchType from "../../types/search";
 import { TransactionsType } from "../../types/transactions";
-import { isSameDay } from "date-fns";
+import SearchByCategory from "../SearchByCategories";
 
 interface SearchProps {
   pageType: "transaction" | "category";
@@ -35,18 +41,21 @@ const SearchBar = ({
   setLoading,
   dateCompare,
 }: SearchProps) => {
+  const [categoryId, setCategoryId] = useState<number | undefined>();
   const isTransactionPage = pageType === "transaction";
   const endpoint = isTransactionPage ? "account" : "category";
   const inputType = searchType === "date" ? "date" : "search";
-  const searchReceiptCategories = async () => {
+  const isCategorySearch = searchType === "category_id";
+  const searchReceiptCategories = useCallback(async () => {
     const id = localStorage.getItem("@gofinance:user_id");
     if (searchType === "date" && dateCompare) {
       dateCompare();
     } else {
       try {
         setLoading(true);
+        const searchPayload = isCategorySearch ? categoryId : searchText
         const response = await api.get(
-          `/${endpoint}?user_id=${id}&type=${transactionType}&${searchType}=${searchText}`
+          `/${endpoint}?user_id=${id}&type=${transactionType}&${searchType}=${searchPayload}`
         );
         loadItems(response.data);
       } catch {
@@ -55,9 +64,15 @@ const SearchBar = ({
         setLoading(false);
       }
     }
-  };
+  }, [categoryId, dateCompare, endpoint, isCategorySearch, loadItems, searchText, searchType, setLoading, transactionType]);
+  useEffect(() => {
+    if (isCategorySearch && categoryId) {
+      searchReceiptCategories();
+    }
+  }, [categoryId, isCategorySearch, searchReceiptCategories]);
+  console.log(categoryId)
   return (
-    <Container>
+    <Container isCategorySearch={isCategorySearch}>
       <select onChange={(evt) => setSearchType(evt.target.value as SearchType)}>
         <option value="title">Título</option>
         <option value="description">Descrição</option>
@@ -68,18 +83,27 @@ const SearchBar = ({
           </>
         )}
       </select>
-      <input
-        value={searchText}
-        type={inputType}
-        placeholder="Pesquisar"
-        onChange={(evt) => setSearchText(evt.currentTarget.value)}
-      />
-      <Image
-        src={searchIcon}
-        alt="/"
-        width={12}
-        onClick={searchReceiptCategories}
-      />
+      {isCategorySearch ? (
+        <SearchByCategory
+          transactionType={transactionType}
+          setCategoryId={setCategoryId}
+        />
+      ) : (
+        <>
+          <input
+            value={searchText}
+            type={inputType}
+            placeholder="Pesquisar"
+            onChange={(evt) => setSearchText(evt.currentTarget.value)}
+          />
+          <Image
+            src={searchIcon}
+            alt="/"
+            width={12}
+            onClick={searchReceiptCategories}
+          />
+        </>
+      )}
     </Container>
   );
 };

@@ -68,7 +68,7 @@ const ReceiptCategories = () => {
           setSearchText={setSearchText}
           searchType={searchType}
           setSearchType={setSearchType}
-          setCategories={setCategories}
+          loadItems={setCategories}
           setLoading={setLoading}
         />
         <TableDetails pageType="category">

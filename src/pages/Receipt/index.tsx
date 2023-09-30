@@ -11,7 +11,7 @@ import SearchType from "../../types/search";
 import { TransactionsType } from "../../types/transactions";
 import { addDays, isSameDay } from "date-fns";
 
-const Debit = () => {
+const Receipt = () => {
   const [userId, setUserId] = useState<string | null>();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -21,12 +21,12 @@ const Debit = () => {
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<CategoriesType[]>([]);
-  const [debits, setDebits] = useState<TransactionsType[]>([]);
-  const listDebitCategories = useCallback(
+  const [receipts, setReceipts] = useState<TransactionsType[]>([]);
+  const listReceiptCategories = useCallback(
     async (id: string | null | undefined) => {
       try {
         setLoading(true);
-        const response = await api.get(`/category?user_id=${id}&type=debit`);
+        const response = await api.get(`/category?user_id=${id}&type=receipt`);
         setCategories(response.data);
       } catch {
         toast.error("Erro ao buscar categorias...");
@@ -36,11 +36,11 @@ const Debit = () => {
     },
     []
   );
-  const listDebit = useCallback(async (id: string | null | undefined) => {
+  const listReceipt = useCallback(async (id: string | null | undefined) => {
     try {
       setLoading(true);
-      const response = await api.get(`/account?user_id=${id}&type=debit`);
-      setDebits(response.data);
+      const response = await api.get(`/account?user_id=${id}&type=receipt`);
+      setReceipts(response.data);
     } catch {
       toast.error("Erro ao buscar dívidas...");
     } finally {
@@ -50,10 +50,10 @@ const Debit = () => {
   useEffect(() => {
     const user_id = localStorage.getItem("@gofinance:user_id");
     setUserId(user_id);
-    listDebit(user_id);
-    listDebitCategories(user_id);
-  }, [userId, listDebit, listDebitCategories]);
-  const createDebitHandler = useCallback(async () => {
+    listReceipt(user_id);
+    listReceiptCategories(user_id);
+  }, [userId, listReceipt, listReceiptCategories]);
+  const createReceiptHandler = useCallback(async () => {
     try {
       await api.post("/account", {
         user_id: Number(userId),
@@ -62,30 +62,30 @@ const Debit = () => {
         value,
         category_id: categoryId,
         date: new Date(),
-        type: "debit",
+        type: "receipt",
       });
-      listDebit(userId);
+      listReceipt(userId);
       toast.success("Dívida adicionada com sucesso!");
     } catch {
       toast.error("Erro ao adicionar dívida...");
     }
-  }, [categoryId, description, listDebit, title, userId, value]);
+  }, [categoryId, description, listReceipt, title, userId, value]);
   const dateCompare = () => {
-    const itemsWithSameDate = debits.filter((currentItem) => {
+    const itemsWithSameDate = receipts.filter((currentItem) => {
       const formattedDate = addDays(new Date(searchText), 1) 
       return isSameDay(new Date(currentItem.date), new Date(formattedDate));
     });
-    setDebits(itemsWithSameDate);
+    setReceipts(itemsWithSameDate);
   };
   if (loading) return <div>Carregando...</div>;
   return (
     <Container>
       <TableContainer>
         <TableNavbar
-          title="Nova dívida"
+          title="Novo recebimento"
           pageType="transaction"
-          transactionType="debit"
-          buttonTitle="Adicionar dívida"
+          transactionType="receipt"
+          buttonTitle="Adicionar recebimento"
           setCategoryId={setCategoryId}
           value={value}
           setValue={setValue}
@@ -95,37 +95,37 @@ const Debit = () => {
           setTitle={setTitle}
           categoryId={categoryId}
           setDescription={setDescription}
-          onSubmit={createDebitHandler}
+          onSubmit={createReceiptHandler}
           searchText={searchText}
           setSearchText={setSearchText}
           searchType={searchType}
           setSearchType={setSearchType}
-          loadItems={setDebits}
+          loadItems={setReceipts}
           setLoading={setLoading}
           dateCompare={dateCompare}
         />
         <TableDetails pageType="transaction">
-          {debits.map((debit) => (
+          {receipts.map((receipt) => (
             <TableLine
-              key={debit.id}
-              endpoint={`/account/${debit.id}`}
-              title={debit.title}
-              description={debit.description}
-              date={debit.date}
-              value={debit.value}
-              categoryTitle={debit.category_title.String}
-              listCategories={listDebit}
-              editSuccessMessage="Dívida editada com sucesso!"
-              editErrorMessage="Erro ao tentar editar dívida..."
-              deleteSuccessMessage="Dívida deletada com sucesso!"
-              deleteErrorMessage="Erro ao tentar deletar dívida..."
+              key={receipt.id}
+              endpoint={`/account/${receipt.id}`}
+              title={receipt.title}
+              description={receipt.description}
+              date={receipt.date}
+              value={receipt.value}
+              categoryTitle={receipt.category_title.String}
+              listCategories={listReceipt}
+              editSuccessMessage="Recebimento editada com sucesso!"
+              editErrorMessage="Erro ao tentar editar recebimento..."
+              deleteSuccessMessage="Recebimento deletada com sucesso!"
+              deleteErrorMessage="Erro ao tentar deletar recebimento..."
               pageType="transaction"
               payload={{
                 user_id: Number(userId),
-                ID: debit.id,
+                ID: receipt.id,
                 title: "",
                 description: "",
-                type: "debit",
+                type: "receipt",
               }}
             />
           ))}
@@ -135,4 +135,4 @@ const Debit = () => {
   );
 };
 
-export default Debit;
+export default Receipt;

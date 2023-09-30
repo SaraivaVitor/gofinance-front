@@ -8,4 +8,8 @@ export type TransactionsType = {
   categoryId: number;
   value: number;
   date: any;
+  category_title: {
+    String: string;
+    Valid: boolean;
+  }
 };

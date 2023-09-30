@@ -7,12 +7,18 @@ const subtitlesLabel = [
   { color: "orange", label: "A receber" },
 ];
 
-const Chart = () => (
+const Chart = ({
+  receiptValue,
+  debitValue,
+}: {
+  receiptValue: number;
+  debitValue: number;
+}) => (
   <Container>
     <VictoryPie
       data={[
-        { x: "A pagar", y: 20 },
-        { x: "A receber", y: 80 },
+        { x: "A pagar", y: debitValue },
+        { x: "A receber", y: receiptValue },
       ]}
       style={{ labels: { display: "none" }, parent: { width: 520 } }}
       innerRadius={100}

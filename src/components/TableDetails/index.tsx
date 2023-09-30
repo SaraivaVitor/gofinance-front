@@ -15,6 +15,7 @@ const TableDetails = ({ children, pageType }: TableDetailsProps) => {
         <h1>Descrição</h1>
         {isTransaction && (
           <>
+            <h1>Categoria</h1>
             <h1>Data</h1>
             <h1>Valor</h1>
           </>
