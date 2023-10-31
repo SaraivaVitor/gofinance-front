@@ -5,6 +5,17 @@ export const Container = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 200px;
+
+  @media (max-width: 1254px) {
+    gap: 0;
+  }
+  @media (max-width: 850px) {
+    margin-left: 60px;
+  }
+  @media (max-width: 740px) {
+    flex-direction: column;
+    gap: 60px;
+  }
 `;
 
 export default createGlobalStyle`

@@ -5,6 +5,10 @@ export const Container = styled.div`
   height: 100vh;
   display: flex;
   justify-content: space-between;
+
+  @media (max-width: 740px) {
+    height: 100%;
+  }
 `;
 
 export const Content = styled.div`

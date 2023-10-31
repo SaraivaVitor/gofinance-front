@@ -9,4 +9,8 @@ export const RightSide = styled.div`
   button {
     width: 100%;
   }
+
+  @media (max-width: 740px) {
+    padding-bottom: 20px;
+  }
 `;
